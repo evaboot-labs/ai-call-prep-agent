@@ -39,7 +39,7 @@ If an export returns 0 people, the name or company did not match. Ask the user f
 ## Step 3: the buyers not on the invite
 
 1. Run `python3 prep.py committee-url "<company>"`. It searches the company for the buyer titles in `MEETING.md`.
-2. Call `export_sn_search_or_list` with that URL and `max_results: 5`. Save the result to `data/committee.json`.
+2. Call `export_sn_search_or_list` with that URL and `max_results: 5`. Poll `get_export` until the status is `EXECUTED`, then save the whole result to `data/committee.json`.
 3. Skip this step when the user says the attendees are the only people who decide.
 
 ## Step 4: facts

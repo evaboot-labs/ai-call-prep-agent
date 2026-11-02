@@ -51,7 +51,13 @@ def norm(s):
 
 def prospects(path):
     d = json.loads(Path(path).read_text())
-    return d.get("prospects", d) if isinstance(d, dict) else d
+    if isinstance(d, dict) and "result" in d:
+        d = d["result"]
+    if isinstance(d, dict):
+        d = d.get("prospects")
+    if not isinstance(d, list):
+        sys.exit(f"{path}: no 'prospects' list. Poll get_export until the status is EXECUTED and save that result.")
+    return d
 
 
 def tenure(years, months):
@@ -182,10 +188,19 @@ def numbers(text):
     return {n.replace(",", "") for n in re.findall(r"\d[\d,]*(?:\.\d+)?", text or "")}
 
 
+def values(x):
+    """Only the values: digits in key names (growth_6m_pct) must not count as facts."""
+    if isinstance(x, dict):
+        return " ".join(values(v) for v in x.values())
+    if isinstance(x, list):
+        return " ".join(values(v) for v in x)
+    return str(x)
+
+
 def cmd_check(a):
     facts = json.loads(Path(a.facts).read_text())
     notes = json.loads(Path(a.notes).read_text())
-    known = numbers(json.dumps(facts, ensure_ascii=False))
+    known = numbers(values(facts))
     bad = []
     for section in ("talking_points", "questions", "watch_outs"):
         for line in notes.get(section, []):

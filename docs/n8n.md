@@ -20,7 +20,7 @@
    - **Bearer Auth** named `Evaboot MCP (Bearer)`: your key from [dash.evaboot.com/dash/api/](https://dash.evaboot.com/dash/api/). Select it on the four Evaboot nodes.
    - **Anthropic** on the **Claude** node.
 3. **Make the Data table** *Call briefs* with the text columns `meeting`, `start`, `company`, `attendees`, `brief`.
-4. **Fill in Your settings:** `your_domain`, `offer`, `buyer_titles` and `max_buyers` (0 to 5).
+4. **Fill in Your settings:** `your_domain`, `offer`, `buyer_titles` and `max_buyers` (1 to 5).
 5. **Test:** open the form URL of **Meeting booked**, enter a real upcoming meeting, and wait for the row.
 
 ## Run it from your calendar

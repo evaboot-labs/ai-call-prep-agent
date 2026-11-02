@@ -93,7 +93,11 @@ return out;
 
 COMMITTEE_JS = UNWRAP + """
 const s = $('Your settings').first().json;
-const rows = $input.all().flatMap(i => (unwrap(i.json) || {}).prospects || []);
+const rows = $input.all().flatMap(i => {
+  const d = unwrap(i.json) || {};
+  if (d.status && d.status !== 'EXECUTED') throw new Error(`Export ${d.search_id || ''} is still ${d.status}: run the workflow again`);
+  return d.prospects || [];
+});
 const company = rows.length ? rows[0]['Company Name'] : $('Attendees').first().json.company;
 const titles = s.buyer_titles.split(',').map(t => t.trim()).filter(Boolean);
 return [{ json: { company, rows,
@@ -104,7 +108,9 @@ FACTS_JS = UNWRAP + """
 const f = $('Meeting booked').first().json;
 const att = $('Attendees').all().map(i => i.json);
 const found = $('Account and buyers').first().json.rows;
-const committee = (unwrap($input.first().json) || {}).prospects || [];
+const cm = unwrap($input.first().json) || {};
+if (cm.status && cm.status !== 'EXECUTED') throw new Error(`The buyers export is still ${cm.status}: run the workflow again`);
+const committee = cm.prospects || [];
 const tenure = (y, m) => { y = +y || 0; m = +m || 0;
   return [y ? `${y} ${y === 1 ? 'yr' : 'yrs'}` : '', (m || !y) ? `${m} mo` : ''].filter(Boolean).join(' '); };
 const pretty = n => n.split(' ').map(w => w.length > 2 && w === w.toUpperCase() ? w[0] + w.slice(1).toLowerCase() : w).join(' ');
@@ -154,7 +160,8 @@ RENDER_JS = """
 const f = $('Facts').first().json;
 const n = $input.first().json.output || $input.first().json;
 const nums = s => new Set((String(s).match(/\\d[\\d,]*(?:\\.\\d+)?/g) || []).map(x => x.replace(/,/g, '')));
-const known = nums(JSON.stringify(f));
+const values = x => Array.isArray(x) ? x.map(values).join(' ') : (x && typeof x === 'object') ? Object.values(x).map(values).join(' ') : String(x);
+const known = nums(values(f));
 const unchecked = [...(n.talking_points || []), ...(n.questions || []), ...(n.watch_outs || [])]
   .filter(l => [...nums(l)].some(x => !known.has(x)));
 const a = f.account || {};
@@ -200,7 +207,7 @@ mcp("Get the attendees", "get_export",
 code("Account and buyers", COMMITTEE_JS, [0, 300])
 mcp("Export the buyers", "export_sn_search_or_list",
     "={{ JSON.stringify({ search_url: $json.search_url, name: 'call prep: buyers at ' + $json.company, "
-    "max_results: Number($('Your settings').first().json.max_buyers) }) }}", [220, 300])
+    "max_results: Math.min(5, Math.max(1, Number($('Your settings').first().json.max_buyers) || 5)) }) }}", [220, 300])
 wait("Wait for the buyers", 45, [440, 300])
 mcp("Get the buyers", "get_export",
     "={{ JSON.stringify({ extraction_id: (j => { let d = j.structuredContent || j; if (d.content) d = JSON.parse(d.content[0].text); "

@@ -29,7 +29,7 @@
         },
         "options": {}
       },
-      "id": "e272a5bf-5aba-4a89-901c-3ddb38a62076",
+      "id": "8dc9edf5-8288-4f36-bf16-1722928e6490",
       "name": "Meeting booked",
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.2,
@@ -37,32 +37,32 @@
         0,
         0
       ],
-      "webhookId": "0d76358b-76ec-4f8b-a6d8-2a3ac476f49b"
+      "webhookId": "08784dbd-1c44-4c84-b845-ee59a4dbaca2"
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "15dd8584-f795-46da-8160-d6aa4fa63904",
+              "id": "6a1c7609-66a0-463c-9775-2a4bb4da488d",
               "name": "your_domain",
               "type": "string",
               "value": "evaboot.com"
             },
             {
-              "id": "804183ff-e16d-47c6-9394-154ea1593236",
+              "id": "6e9e699d-04d8-4a4f-940c-af837b21538f",
               "name": "offer",
               "type": "string",
               "value": "An Evaboot plan: clean B2B leads with verified emails, exported from LinkedIn Sales Navigator."
             },
             {
-              "id": "e917f49d-a602-498d-8cf1-8ab749ff0143",
+              "id": "6796f1f3-9375-44ab-a376-44cd47cb3f99",
               "name": "buyer_titles",
               "type": "string",
               "value": "VP Sales, Head of Sales, Sales Director, Chief Revenue Officer, Head of Business Development, Revenue Operations, Sales Operations"
             },
             {
-              "id": "129569e1-3b5c-4d13-99dc-b63b354b45ea",
+              "id": "7352cca2-5655-4a87-86d2-623b02eff46c",
               "name": "max_buyers",
               "type": "string",
               "value": "5"
@@ -72,7 +72,7 @@
         "includeOtherFields": true,
         "options": {}
       },
-      "id": "b190b8ab-580d-4d3c-9c62-6735cbc79d14",
+      "id": "7c6d6769-98b7-44ac-9847-31d5e303e2ee",
       "name": "Your settings",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -85,7 +85,7 @@
       "parameters": {
         "jsCode": "\nfunction unwrap(j) {\n  let d = j && j.structuredContent ? j.structuredContent : j;\n  if (d && Array.isArray(d.content) && d.content[0]) {\n    const t = d.content[0].text;\n    d = typeof t === 'string' ? JSON.parse(t) : t;\n  }\n  return d && d.result !== undefined ? d.result : d;\n}\nconst SN = 'https://www.linkedin.com/sales/search/people?query=';\nconst enc = s => encodeURIComponent(s).replace(/[()']/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());\nconst filter = (kind, vals) => `(type:${kind},values:List(${vals.map(v => `(text:${enc(v)},selectionType:INCLUDED)`).join(',')}))`;\nconst norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');\n\nconst s = $('Your settings').first().json;\nconst f = $('Meeting booked').first().json;\nconst mine = s.your_domain.toLowerCase();\nconst out = [];\nfor (const line of String(f.Attendees || '').split('\\n')) {\n  const [name, email, company] = line.split(',').map(x => (x || '').trim());\n  if (!name) continue;\n  const domain = (email || '').toLowerCase().split('@')[1] || '';\n  if (domain === mine) continue;\n  const comp = company || (domain ? domain.split('.')[0] : '');\n  if (!comp) continue;\n  out.push({ json: { name, email, company: comp,\n    search_url: `${SN}(keywords:${enc(name)},filters:List(${filter('CURRENT_COMPANY', [comp])}))` } });\n}\nif (!out.length) throw new Error('No external attendee: write one per line as Name, email, Company');\nreturn out;\n"
       },
-      "id": "47172739-6ab3-49a2-b188-95254b0de649",
+      "id": "4cabed4c-8623-4401-a084-6cbf3c0daecc",
       "name": "Attendees",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -111,7 +111,7 @@
           "timeout": 120000
         }
       },
-      "id": "b9375f6d-4c6a-4620-9ae4-10dcf15c1ced",
+      "id": "b9686d66-86fd-4634-b26e-bf5b5a7ad0e9",
       "name": "Look up each attendee",
       "type": "@n8n/n8n-nodes-langchain.mcpClient",
       "typeVersion": 1.1,
@@ -130,7 +130,7 @@
       "parameters": {
         "amount": 45
       },
-      "id": "b48f7107-3e89-44d1-8e55-9e950d983522",
+      "id": "d0b6441a-fa93-42c3-a2f0-d40314cce433",
       "name": "Wait for the exports",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -138,7 +138,7 @@
         880,
         0
       ],
-      "webhookId": "1eaa40c9-c597-489f-8a03-1180f8180df0"
+      "webhookId": "016ab6b4-3aed-4214-bfb3-be23ceb2d090"
     },
     {
       "parameters": {
@@ -156,7 +156,7 @@
           "timeout": 120000
         }
       },
-      "id": "93c2a4c1-cf27-4fac-9135-40a58770f7f7",
+      "id": "edc46849-b31a-44eb-a105-8fd14cb5687f",
       "name": "Get the attendees",
       "type": "@n8n/n8n-nodes-langchain.mcpClient",
       "typeVersion": 1.1,
@@ -173,9 +173,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nfunction unwrap(j) {\n  let d = j && j.structuredContent ? j.structuredContent : j;\n  if (d && Array.isArray(d.content) && d.content[0]) {\n    const t = d.content[0].text;\n    d = typeof t === 'string' ? JSON.parse(t) : t;\n  }\n  return d && d.result !== undefined ? d.result : d;\n}\nconst SN = 'https://www.linkedin.com/sales/search/people?query=';\nconst enc = s => encodeURIComponent(s).replace(/[()']/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());\nconst filter = (kind, vals) => `(type:${kind},values:List(${vals.map(v => `(text:${enc(v)},selectionType:INCLUDED)`).join(',')}))`;\nconst norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');\n\nconst s = $('Your settings').first().json;\nconst rows = $input.all().flatMap(i => (unwrap(i.json) || {}).prospects || []);\nconst company = rows.length ? rows[0]['Company Name'] : $('Attendees').first().json.company;\nconst titles = s.buyer_titles.split(',').map(t => t.trim()).filter(Boolean);\nreturn [{ json: { company, rows,\n  search_url: `${SN}(filters:List(${filter('CURRENT_COMPANY', [company])},${filter('CURRENT_TITLE', titles)}))` } }];\n"
+        "jsCode": "\nfunction unwrap(j) {\n  let d = j && j.structuredContent ? j.structuredContent : j;\n  if (d && Array.isArray(d.content) && d.content[0]) {\n    const t = d.content[0].text;\n    d = typeof t === 'string' ? JSON.parse(t) : t;\n  }\n  return d && d.result !== undefined ? d.result : d;\n}\nconst SN = 'https://www.linkedin.com/sales/search/people?query=';\nconst enc = s => encodeURIComponent(s).replace(/[()']/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());\nconst filter = (kind, vals) => `(type:${kind},values:List(${vals.map(v => `(text:${enc(v)},selectionType:INCLUDED)`).join(',')}))`;\nconst norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');\n\nconst s = $('Your settings').first().json;\nconst rows = $input.all().flatMap(i => {\n  const d = unwrap(i.json) || {};\n  if (d.status && d.status !== 'EXECUTED') throw new Error(`Export ${d.search_id || ''} is still ${d.status}: run the workflow again`);\n  return d.prospects || [];\n});\nconst company = rows.length ? rows[0]['Company Name'] : $('Attendees').first().json.company;\nconst titles = s.buyer_titles.split(',').map(t => t.trim()).filter(Boolean);\nreturn [{ json: { company, rows,\n  search_url: `${SN}(filters:List(${filter('CURRENT_COMPANY', [company])},${filter('CURRENT_TITLE', titles)}))` } }];\n"
       },
-      "id": "97abb7bd-e6d9-459b-9d23-303190c551d3",
+      "id": "eea9c1ea-5f08-4540-bb4b-f83cd04e8b43",
       "name": "Account and buyers",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -195,12 +195,12 @@
           "cachedResultName": "export_sn_search_or_list"
         },
         "inputMode": "json",
-        "jsonInput": "={{ JSON.stringify({ search_url: $json.search_url, name: 'call prep: buyers at ' + $json.company, max_results: Number($('Your settings').first().json.max_buyers) }) }}",
+        "jsonInput": "={{ JSON.stringify({ search_url: $json.search_url, name: 'call prep: buyers at ' + $json.company, max_results: Math.min(5, Math.max(1, Number($('Your settings').first().json.max_buyers) || 5)) }) }}",
         "options": {
           "timeout": 120000
         }
       },
-      "id": "dce7dd2d-0847-40d4-b730-f65d527d7b0f",
+      "id": "54e787a8-e475-4b0f-91e3-0a1089340da8",
       "name": "Export the buyers",
       "type": "@n8n/n8n-nodes-langchain.mcpClient",
       "typeVersion": 1.1,
@@ -219,7 +219,7 @@
       "parameters": {
         "amount": 45
       },
-      "id": "d62ed4e2-e194-4d6a-825a-532c70a3d060",
+      "id": "59cae2e7-cd69-48bc-a234-6bea1227155b",
       "name": "Wait for the buyers",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -227,7 +227,7 @@
         440,
         300
       ],
-      "webhookId": "ab715eda-4474-4730-a666-7cc99c5e9caa"
+      "webhookId": "42e1d65c-fd33-42fc-99ee-8817ed9de2fa"
     },
     {
       "parameters": {
@@ -245,7 +245,7 @@
           "timeout": 120000
         }
       },
-      "id": "5eb7be7a-8a51-4c18-8a31-f5c63b9617ac",
+      "id": "ee885bf6-8824-4f93-9155-56f61fe17f15",
       "name": "Get the buyers",
       "type": "@n8n/n8n-nodes-langchain.mcpClient",
       "typeVersion": 1.1,
@@ -262,9 +262,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nfunction unwrap(j) {\n  let d = j && j.structuredContent ? j.structuredContent : j;\n  if (d && Array.isArray(d.content) && d.content[0]) {\n    const t = d.content[0].text;\n    d = typeof t === 'string' ? JSON.parse(t) : t;\n  }\n  return d && d.result !== undefined ? d.result : d;\n}\nconst SN = 'https://www.linkedin.com/sales/search/people?query=';\nconst enc = s => encodeURIComponent(s).replace(/[()']/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());\nconst filter = (kind, vals) => `(type:${kind},values:List(${vals.map(v => `(text:${enc(v)},selectionType:INCLUDED)`).join(',')}))`;\nconst norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');\n\nconst f = $('Meeting booked').first().json;\nconst att = $('Attendees').all().map(i => i.json);\nconst found = $('Account and buyers').first().json.rows;\nconst committee = (unwrap($input.first().json) || {}).prospects || [];\nconst tenure = (y, m) => { y = +y || 0; m = +m || 0;\n  return [y ? `${y} ${y === 1 ? 'yr' : 'yrs'}` : '', (m || !y) ? `${m} mo` : ''].filter(Boolean).join(' '); };\nconst pretty = n => n.split(' ').map(w => w.length > 2 && w === w.toUpperCase() ? w[0] + w.slice(1).toLowerCase() : w).join(' ');\nconst cid = p => (p['Company Linkedin URL Unique ID'] || '').replace(/\\/$/, '').split('/').pop();\nconst person = p => ({\n  name: pretty(p['Full Name'] || ''), title: p['Current Job'], headline: p['Profile Headline'], location: p['Location'],\n  in_role: tenure(p['Years in Position'], p['Months in Position']),\n  at_company: tenure(p['Years in Company'], p['Months in Company']),\n  posts_30_days: p['Profile Recent Posts (30 Days)'], email: p['Email'], email_status: p['Email Status'],\n  linkedin: p['Linkedin URL Public'], summary: (p['Profile Summary'] || '').slice(0, 400) });\nconst attendees = [], unmatched = [];\nfor (const a of att) {\n  const hit = found.find(p => norm(p['Full Name']) === norm(a.name));\n  if (hit) attendees.push(person(hit)); else unmatched.push(a.name);\n}\nconst base = found.find(p => norm(p['Full Name']) === norm(attendees[0] && attendees[0].name)) || committee[0] || {};\nconst seen = new Set(attendees.map(p => norm(p.name)));\nconst not_on_invite = committee.filter(p => !seen.has(norm(p['Full Name'])) && (!base['Company Name'] || cid(p) === cid(base)))\n  .map(p => { const x = person(p); return { name: x.name, title: x.title, in_role: x.in_role, email: x.email }; });\nconst depts = (base['Department Headcounts'] || '').split('\\n').map(l => l.split(':')).filter(x => x[1])\n  .map(([k, v]) => [k.trim(), +v]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k, v]) => `${k} ${v}`);\nconst account = { name: base['Company Name'], domain: base['Company Domain'], industry: base['Company Industry'],\n  founded: base['Company Year Founded'], hq: base['Company Location'], employees: base['Company Employee Exact Count'],\n  growth_6m_pct: base['Company Employee Growth 6 Months (%)'], growth_1y_pct: base['Company Employee Growth 1 Year (%)'],\n  growth_2y_pct: base['Company Employee Growth 2 Years (%)'], sales_team: base['Sales Team Size'],\n  business_development: base['Business Development Size'], top_departments: depts,\n  description: base['Company Description'] };\nreturn [{ json: { meeting: { title: f['Meeting title'], start: f['Start'], agenda: f['Agenda'] || '' },\n  account, attendees, unmatched, not_on_invite } }];\n"
+        "jsCode": "\nfunction unwrap(j) {\n  let d = j && j.structuredContent ? j.structuredContent : j;\n  if (d && Array.isArray(d.content) && d.content[0]) {\n    const t = d.content[0].text;\n    d = typeof t === 'string' ? JSON.parse(t) : t;\n  }\n  return d && d.result !== undefined ? d.result : d;\n}\nconst SN = 'https://www.linkedin.com/sales/search/people?query=';\nconst enc = s => encodeURIComponent(s).replace(/[()']/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());\nconst filter = (kind, vals) => `(type:${kind},values:List(${vals.map(v => `(text:${enc(v)},selectionType:INCLUDED)`).join(',')}))`;\nconst norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');\n\nconst f = $('Meeting booked').first().json;\nconst att = $('Attendees').all().map(i => i.json);\nconst found = $('Account and buyers').first().json.rows;\nconst cm = unwrap($input.first().json) || {};\nif (cm.status && cm.status !== 'EXECUTED') throw new Error(`The buyers export is still ${cm.status}: run the workflow again`);\nconst committee = cm.prospects || [];\nconst tenure = (y, m) => { y = +y || 0; m = +m || 0;\n  return [y ? `${y} ${y === 1 ? 'yr' : 'yrs'}` : '', (m || !y) ? `${m} mo` : ''].filter(Boolean).join(' '); };\nconst pretty = n => n.split(' ').map(w => w.length > 2 && w === w.toUpperCase() ? w[0] + w.slice(1).toLowerCase() : w).join(' ');\nconst cid = p => (p['Company Linkedin URL Unique ID'] || '').replace(/\\/$/, '').split('/').pop();\nconst person = p => ({\n  name: pretty(p['Full Name'] || ''), title: p['Current Job'], headline: p['Profile Headline'], location: p['Location'],\n  in_role: tenure(p['Years in Position'], p['Months in Position']),\n  at_company: tenure(p['Years in Company'], p['Months in Company']),\n  posts_30_days: p['Profile Recent Posts (30 Days)'], email: p['Email'], email_status: p['Email Status'],\n  linkedin: p['Linkedin URL Public'], summary: (p['Profile Summary'] || '').slice(0, 400) });\nconst attendees = [], unmatched = [];\nfor (const a of att) {\n  const hit = found.find(p => norm(p['Full Name']) === norm(a.name));\n  if (hit) attendees.push(person(hit)); else unmatched.push(a.name);\n}\nconst base = found.find(p => norm(p['Full Name']) === norm(attendees[0] && attendees[0].name)) || committee[0] || {};\nconst seen = new Set(attendees.map(p => norm(p.name)));\nconst not_on_invite = committee.filter(p => !seen.has(norm(p['Full Name'])) && (!base['Company Name'] || cid(p) === cid(base)))\n  .map(p => { const x = person(p); return { name: x.name, title: x.title, in_role: x.in_role, email: x.email }; });\nconst depts = (base['Department Headcounts'] || '').split('\\n').map(l => l.split(':')).filter(x => x[1])\n  .map(([k, v]) => [k.trim(), +v]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k, v]) => `${k} ${v}`);\nconst account = { name: base['Company Name'], domain: base['Company Domain'], industry: base['Company Industry'],\n  founded: base['Company Year Founded'], hq: base['Company Location'], employees: base['Company Employee Exact Count'],\n  growth_6m_pct: base['Company Employee Growth 6 Months (%)'], growth_1y_pct: base['Company Employee Growth 1 Year (%)'],\n  growth_2y_pct: base['Company Employee Growth 2 Years (%)'], sales_team: base['Sales Team Size'],\n  business_development: base['Business Development Size'], top_departments: depts,\n  description: base['Company Description'] };\nreturn [{ json: { meeting: { title: f['Meeting title'], start: f['Start'], agenda: f['Agenda'] || '' },\n  account, attendees, unmatched, not_on_invite } }];\n"
       },
-      "id": "7f564346-2d7e-4976-92c7-15964aa2675f",
+      "id": "3f4fc84b-5c6e-4c8e-adf5-c8f5297936f3",
       "name": "Facts",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -279,7 +279,7 @@
         "text": "=You prepare a sales rep for a booked call. Use only the facts in the JSON below: never add a fact from memory.\nWrite tenure exactly as given (\"1 yr 3 mo\"). Do not guess anyone's gender.\n\nWhat we sell: {{ $('Your settings').first().json.offer }}\n\nReturn:\n- goal: one sentence, what the rep wants out of this call.\n- talking_points: 2 to 4. Each starts from one fact (time in role, a past company in a summary, the sales team size, growth, a buyer not on the invite) and says what to do with it.\n- questions: 2 to 4 questions the facts cannot answer.\n- watch_outs: 0 to 2, for example a very new attendee or flat growth.\n\nFacts:\n{{ JSON.stringify($json) }}",
         "hasOutputParser": true
       },
-      "id": "6f615b44-510d-4ff3-acf7-409efc3d3e62",
+      "id": "1e826127-fb5a-45e8-80b2-570d46498a03",
       "name": "Write the notes",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
@@ -303,7 +303,7 @@
           "maxTokensToSample": 3000
         }
       },
-      "id": "7ffd55cd-13dd-4dbd-8f90-be9ec7f6aefb",
+      "id": "a45a86bd-bd9f-4099-854a-ba3fce567ac4",
       "name": "Claude",
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.3,
@@ -323,7 +323,7 @@
         "schemaType": "manual",
         "inputSchema": "{\n  \"type\": \"object\",\n  \"required\": [\n    \"goal\",\n    \"talking_points\",\n    \"questions\"\n  ],\n  \"properties\": {\n    \"goal\": {\n      \"type\": \"string\"\n    },\n    \"talking_points\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"questions\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"watch_outs\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}"
       },
-      "id": "977a2266-458a-440a-b576-6dc660a46e79",
+      "id": "99888fcc-c4b2-4b95-a5a7-41d39acd1342",
       "name": "Notes",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
@@ -334,9 +334,9 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst f = $('Facts').first().json;\nconst n = $input.first().json.output || $input.first().json;\nconst nums = s => new Set((String(s).match(/\\d[\\d,]*(?:\\.\\d+)?/g) || []).map(x => x.replace(/,/g, '')));\nconst known = nums(JSON.stringify(f));\nconst unchecked = [...(n.talking_points || []), ...(n.questions || []), ...(n.watch_outs || [])]\n  .filter(l => [...nums(l)].some(x => !known.has(x)));\nconst a = f.account || {};\nconst L = [`# Call prep: ${f.meeting.title}`, '', `**When:** ${f.meeting.start}`, '', `**Goal of the call:** ${n.goal}`, '',\n  '## The account', '', `**${a.name}** (${a.domain}) · ${a.industry} · founded ${a.founded} · ${a.hq}`, '',\n  `- ${a.employees} employees, ${a.growth_6m_pct}% in 6 months, ${a.growth_1y_pct}% in 1 year, ${a.growth_2y_pct}% in 2 years`,\n  `- Sales team ${a.sales_team}, business development ${a.business_development}`,\n  `- Biggest teams: ${(a.top_departments || []).join(', ')}`, '', '## Who you meet', '',\n  '| Attendee | Role | In role | At company |', '|---|---|---|---|',\n  ...f.attendees.map(p => `| ${p.name} | ${p.title} | ${p.in_role} | ${p.at_company} |`)];\nif (f.unmatched.length) L.push('', `Not found in Sales Navigator: ${f.unmatched.join(', ')}.`);\nif (f.not_on_invite.length) L.push('', '## Not on the invite', '', ...f.not_on_invite.map(p => `- ${p.name}, ${p.title} (${p.in_role} in role)`));\nL.push('', '## Talking points', '', ...(n.talking_points || []).map((t, i) => `${i + 1}. ${t}`));\nL.push('', '## Questions to ask', '', ...(n.questions || []).map((t, i) => `${i + 1}. ${t}`));\nif ((n.watch_outs || []).length) L.push('', '## Watch out', '', ...n.watch_outs.map(t => `- ${t}`));\nif (unchecked.length) L.push('', '## Check before the call', '', ...unchecked.map(t => `- A number here is not in the facts: ${t}`));\nreturn [{ json: { meeting: f.meeting.title, start: f.meeting.start, company: a.name || '',\n  attendees: f.attendees.map(p => p.name).join(', '), brief: L.join('\\n') } }];\n"
+        "jsCode": "\nconst f = $('Facts').first().json;\nconst n = $input.first().json.output || $input.first().json;\nconst nums = s => new Set((String(s).match(/\\d[\\d,]*(?:\\.\\d+)?/g) || []).map(x => x.replace(/,/g, '')));\nconst values = x => Array.isArray(x) ? x.map(values).join(' ') : (x && typeof x === 'object') ? Object.values(x).map(values).join(' ') : String(x);\nconst known = nums(values(f));\nconst unchecked = [...(n.talking_points || []), ...(n.questions || []), ...(n.watch_outs || [])]\n  .filter(l => [...nums(l)].some(x => !known.has(x)));\nconst a = f.account || {};\nconst L = [`# Call prep: ${f.meeting.title}`, '', `**When:** ${f.meeting.start}`, '', `**Goal of the call:** ${n.goal}`, '',\n  '## The account', '', `**${a.name}** (${a.domain}) · ${a.industry} · founded ${a.founded} · ${a.hq}`, '',\n  `- ${a.employees} employees, ${a.growth_6m_pct}% in 6 months, ${a.growth_1y_pct}% in 1 year, ${a.growth_2y_pct}% in 2 years`,\n  `- Sales team ${a.sales_team}, business development ${a.business_development}`,\n  `- Biggest teams: ${(a.top_departments || []).join(', ')}`, '', '## Who you meet', '',\n  '| Attendee | Role | In role | At company |', '|---|---|---|---|',\n  ...f.attendees.map(p => `| ${p.name} | ${p.title} | ${p.in_role} | ${p.at_company} |`)];\nif (f.unmatched.length) L.push('', `Not found in Sales Navigator: ${f.unmatched.join(', ')}.`);\nif (f.not_on_invite.length) L.push('', '## Not on the invite', '', ...f.not_on_invite.map(p => `- ${p.name}, ${p.title} (${p.in_role} in role)`));\nL.push('', '## Talking points', '', ...(n.talking_points || []).map((t, i) => `${i + 1}. ${t}`));\nL.push('', '## Questions to ask', '', ...(n.questions || []).map((t, i) => `${i + 1}. ${t}`));\nif ((n.watch_outs || []).length) L.push('', '## Watch out', '', ...n.watch_outs.map(t => `- ${t}`));\nif (unchecked.length) L.push('', '## Check before the call', '', ...unchecked.map(t => `- A number here is not in the facts: ${t}`));\nreturn [{ json: { meeting: f.meeting.title, start: f.meeting.start, company: a.name || '',\n  attendees: f.attendees.map(p => p.name).join(', '), brief: L.join('\\n') } }];\n"
       },
-      "id": "bb9d8f8a-b5c6-4a74-b257-4f11f14e88e0",
+      "id": "f59a7737-9fe1-4c54-809f-6bd480017919",
       "name": "Check and render",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -360,7 +360,7 @@
         },
         "options": {}
       },
-      "id": "33c700e2-df67-4530-9fc7-2423697da48f",
+      "id": "097dbcc2-5ff6-4a25-ae7f-226371c3220e",
       "name": "Add to Call briefs",
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
