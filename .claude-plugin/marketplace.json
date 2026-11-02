@@ -1,0 +1,14 @@
+{
+  "name": "evaboot-labs-ai-call-prep-agent",
+  "owner": { "name": "Evaboot", "url": "https://evaboot.com" },
+  "metadata": {
+    "description": "A one-page brief before every sales call: the attendees from Sales Navigator, the account, the buyers not on the invite, talking points."
+  },
+  "plugins": [
+    {
+      "name": "ai-call-prep-agent",
+      "source": "./",
+      "description": "Look up a meeting's attendees and their account in Sales Navigator with Evaboot, and write a one-page call brief from those facts."
+    }
+  ]
+}

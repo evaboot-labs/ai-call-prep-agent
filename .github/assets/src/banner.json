@@ -1,0 +1,7 @@
+{"layout": "flow", "eyebrow": "evaboot-labs · ai-call-prep-agent", "headline": "Know who you meet.",
+ "subline": "A booked call in. A one-page brief from Sales Navigator out.",
+ "nodes": [{"label": "01 · Invite", "title": "Your calendar", "caption": "The meeting and its attendees"},
+           {"label": "02 · Look up", "title": "Evaboot", "caption": "Roles, tenure, the account"},
+           {"label": "03 · Write", "title": "Your AI Agent", "caption": "Notes from the facts only"},
+           {"label": "04 · Result", "title": "One-page brief", "caption": "Talking points and questions"}],
+ "spec": "server <em>mcp.evaboot.com/mcp</em> · about 2 to 8 credits per call"}
