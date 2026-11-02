@@ -1,0 +1,13 @@
+{
+  "name": "ai-call-prep-agent",
+  "version": "1.0.0",
+  "description": "Look up a meeting's attendees and their account in Sales Navigator with Evaboot, and write a one-page call brief from those facts.",
+  "author": { "name": "Evaboot", "url": "https://evaboot.com" },
+  "homepage": "https://evaboot.com/blog/how-to-automate-account-research",
+  "repository": "https://github.com/evaboot-labs/ai-call-prep-agent",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://evaboot.com/privacy-policy",
+  "keywords": ["sales-navigator", "call-prep", "account-research", "meeting-brief", "evaboot", "mcp", "sales"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}
